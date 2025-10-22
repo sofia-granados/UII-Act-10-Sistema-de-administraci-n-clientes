@@ -1,0 +1,58 @@
+{% extends "cliente/base.html" %}
+
+{% block body %}
+  <h3 class="text-center m-4">Agregar Cliente</h3>
+  
+  <!-- MOSTRAR ERRORES DEL FORMULARIO -->
+  {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      <strong>Errores en el formulario:</strong>
+      <ul>
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if success %}
+    <div class="alert alert-success" role="alert">
+      El nuevo cliente se agregó correctamente.
+      <a href="{% url 'index' %}" class="alert-link">Ir a la página de inicio.</a>
+    </div>
+  {% else %}
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="card border-primary mb-3">
+            <div class="card-header">
+                <i class="fa-solid fa-address-card fa-lg"></i> Registro De Clientes
+            </div>
+            <div class="card-body">
+                <form action="{% url 'add' %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <!-- RENDERIZAR FORMULARIO CAMPO POR CAMPO -->
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <a href="{% url 'index' %}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
